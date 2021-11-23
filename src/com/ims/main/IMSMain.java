@@ -8,10 +8,12 @@ import com.ims.services.CartServiceImpl;
 public class IMSMain {
 
 	public static void main(String[] args) throws IOException {
+		//loading the master data i.e., items
 		ItemsDao.loadItemsFromFile("items.csv");
+		
 		CartServiceImpl cartService = new CartServiceImpl();
 		cartService.processOrder("input.csv");
-		ItemsDao.getAllCards();
+		cartService.getCardDetails();
 	}
 
 }

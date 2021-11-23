@@ -7,6 +7,12 @@ import com.ims.modal.ItemsVO;
 
 public interface ICartService {
 	String validateItemsQuantity(List<InputItemVO> items);
+
 	void processOrder(String fileName);
-	double calculateTotalPrice(List<InputItemVO> requestedItems) ;
+
+	double calculateTotalPrice(List<InputItemVO> requestedItems);
+
+	boolean validateCategoryThreshold();
+
+	void getCategoryOfInputItem(List<InputItemVO> requestedItems);
 }
