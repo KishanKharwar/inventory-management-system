@@ -1,6 +1,6 @@
 package com.ims.modal;
 
-public class Items {
+public class ItemsVO {
 
 	private String category;
 	private String item;

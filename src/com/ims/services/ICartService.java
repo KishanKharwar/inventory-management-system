@@ -2,11 +2,11 @@ package com.ims.services;
 
 import java.util.List;
 
-import com.ims.modal.InputItem;
-import com.ims.modal.Items;
+import com.ims.modal.InputItemVO;
+import com.ims.modal.ItemsVO;
 
 public interface ICartService {
-	String validateCartItemsQuantity(List<InputItem> items);
+	String validateItemsQuantity(List<InputItemVO> items);
 	void processOrder(String fileName);
-	double calculateTotalPrice(List<InputItem> requestedItems) ;
+	double calculateTotalPrice(List<InputItemVO> requestedItems) ;
 }

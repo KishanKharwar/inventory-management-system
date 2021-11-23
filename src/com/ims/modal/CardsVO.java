@@ -1,6 +1,6 @@
 package com.ims.modal;
 
-public class Cards {
+public class CardsVO {
 	private String cardNumber;
 
 	public String getCardNumber() {

@@ -13,18 +13,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ims.modal.Items;
+import com.ims.modal.ItemsVO;
 
 /**
  * 
- * @author author-name this class is following 2 design patterns 1) DAO 2) Cache
+ * @author author-name 
+ * 		this class is following 2 design patterns 1) DAO 2) Cache
  *         DP for storing the data to the map.
  *
  */
 public class ItemsDao {
 
 	// this hashmap is acting as database to store pre-populated items
-	private static Map<String, Items> itemMap = new HashMap<>();
+	private static Map<String, ItemsVO> itemMap = new HashMap<>();
 	public static List<String> cardList = new ArrayList();
 	public static Map<String, Integer> countMap = new HashMap<>();
 	
@@ -44,7 +45,7 @@ public class ItemsDao {
 					continue;
 				}
 				String[] itemsArray = line.split(",");
-				Items item = itemsDao.convertIntoItem(itemsArray);
+				ItemsVO item = itemsDao.convertIntoItem(itemsArray);
 				itemMap.put(itemsArray[1], item);
 			}
 		} catch (IOException ex) {
@@ -54,9 +55,9 @@ public class ItemsDao {
 
 	// this method will print the list of items present in the hashmap(db)
 	public static void getAllItems() {
-		for (Map.Entry<String, Items> entry : itemMap.entrySet()) {
+		for (Map.Entry<String, ItemsVO> entry : itemMap.entrySet()) {
 			System.out.println(entry.getKey() + "-----" + entry.getValue());
-			String category = ((Items) entry.getValue()).getCategory();
+			String category = ((ItemsVO) entry.getValue()).getCategory();
 			if (countMap.containsKey(category)) {
 				countMap.put(category, countMap.get(category) + 1);
 			} else {
@@ -107,8 +108,8 @@ public class ItemsDao {
 	// this method is used by loadItemCSVFile method for converting the items array
 	// to items object
 	// input should be items array from the buffered reader.
-	public Items convertIntoItem(String[] itemArray) {
-		Items item = new Items();
+	public ItemsVO convertIntoItem(String[] itemArray) {
+		ItemsVO item = new ItemsVO();
 
 		item.setCategory(itemArray[0]);
 		item.setItem(itemArray[1]);

@@ -1,6 +1,6 @@
 package com.ims.modal;
 
-public class InputItem {
+public class InputItemVO {
 	private String item;
 	private int quantity;
 	private String cardNumber;

@@ -12,121 +12,113 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ims.dao.ItemsDao;
-import com.ims.modal.InputItem;
-import com.ims.modal.Items;
+import com.ims.helper.FileToObjectHelper;
+import com.ims.modal.InputItemVO;
+import com.ims.modal.ItemsVO;
 
 public class CartServiceImpl implements ICartService {
 
 	private ItemsDao itemsDao = new ItemsDao();
 
-	@Override
 	public void processOrder(String fileName) {
-		CartServiceImpl cartService = new CartServiceImpl();
+		System.out.println("Inside processOrder method of CartServiceImpl class with file name as input : " + fileName);
+		FileToObjectHelper helper = new FileToObjectHelper();
 
-		List<InputItem> requestedItems = cartService.convertIntoObject(fileName);
-		String incorrectItemQty = validateCartItemsQuantity(requestedItems);
+		// converting the input request to InputItemVO object
+		List<InputItemVO> requestedItems = helper.convertIntoObject(fileName);
+		System.out.println("Input Items in object : " + requestedItems);
 
+		// validating the input item qty
+		String incorrectItemQty = validateItemsQuantity(requestedItems);
+		System.out.println("Checking the incorrect item : " + incorrectItemQty);
+
+		// if the input item qty is greater than the item qty in db the throwing error
+		// in a file
 		if (incorrectItemQty != null) {
+			System.out.println(">>>>>>> Incorrect Item Quantity found : " + incorrectItemQty);
 			writeIntoErrorFile(incorrectItemQty);
-		}else {
-			
-			double totalPrice = calculateTotalPrice(requestedItems);
-			writeIntoOutputFile();
+		} else {
+			// double totalPrice = calculateTotalPrice(requestedItems);
+			System.out.println("Writing the total price to the output file ");
+			writeIntoOutputFile(requestedItems);
+			System.out.println("Successfully written to the output file ");
 		}
-
-		
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>> Successfully returning >>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 
-	public double calculateTotalPrice(List<InputItem> requestedItems) {
-		double totalPrice = 0;
-		for (InputItem requestedItem : requestedItems) {
-			totalPrice = totalPrice + itemsDao.getItemPrice(requestedItem.getItem()) * requestedItem.getQuantity();
-		}
+	// this method will be validating the quantity of items from the input file, if
+	// no incorrect item qty found then returning null
+	public String validateItemsQuantity(List<InputItemVO> requestedItems) {
+		System.out.println(
+				"Inside method validateItemsQuantity of CartServiceImpl class with input as : " + requestedItems);
+		for (InputItemVO requestedItem : requestedItems) {
 
-		return totalPrice;
-	}
-
-	private void writeIntoErrorFile(String item) {
-		try {
-			BufferedWriter writer = Files.newBufferedWriter(Paths.get("output.txt"));
-			writer.write("Please correct quantities for Item : " + item);
-			writer.newLine();
-
-			writer.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private List<InputItem> convertIntoObject(String fileName) {
-		String line = "";
-		List<InputItem> items = new ArrayList<>();
-		try {
-			URL url = ItemsDao.class.getClassLoader().getResource(fileName);
-			BufferedReader br = new BufferedReader(new FileReader(url.getPath()));
-			while ((line = br.readLine()) != null) {
-				String[] itemsArray = line.split(",");
-				InputItem item = convertIntoInputItem(itemsArray);
-				itemsDao.addCardDetail(item.getCardNumber());
-				items.add(item);
-			}
-			return items;
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		return null;
-	}
-
-	public InputItem convertIntoInputItem(String[] itemArray) {
-		InputItem item = new InputItem();
-
-		item.setItem(itemArray[0]);
-		item.setQuantity(Integer.valueOf(itemArray[1]));
-		item.setCardNumber(itemArray[2]);
-		return item;
-	}
-
-	@Override
-	// this method will be validating the quantity of items from the input file
-	public String validateCartItemsQuantity(List<InputItem> requestedItems) {
-		for (InputItem requestedItem : requestedItems) {
+			// checking if the requested qty is greater than db then returning the incorrect
+			// item name
 			if (requestedItem.getQuantity() > itemsDao.getItemQuantity(requestedItem.getItem())) {
+				System.out.println("Found incorrect item qyt : " + requestedItem.getItem());
 				return requestedItem.getItem();
 			}
 		}
 		return null;
 	}
 
-	// this method is for writing the output of the cart to the csv file
-	public boolean writeIntoOutputFile() {
+	private void writeIntoErrorFile(String item) {
+		System.out.println("Inside method writeIntoErrorFile of CartServiceImpl class with input as incorrect item  : " + item);
+		
 		try {
-			// create a list of objects
-			CartServiceImpl cartService = new CartServiceImpl();
-			List<InputItem> items = cartService.convertIntoObject("input.csv");
+			System.out.println("Strated writing in the error file ");
+			BufferedWriter writer = Files.newBufferedWriter(Paths.get("output.txt"));
+			writer.write("Please correct quantities for Item : " + item);
+			writer.newLine();
+
+			writer.close();
+			System.out.println("Successfully written in the error file");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// this method is for writing the output of the cart to the csv file
+	private void writeIntoOutputFile(List<InputItemVO> items) {
+		System.out.println("Inside method writeIntoOutputFile of CartServiceImpl class having input as requested item");
+		try {
 			// create a writer
+			System.out.println("Started writting in the output file ");
 			BufferedWriter writer = Files.newBufferedWriter(Paths.get("output.csv"));
 
 			// write header record
-			writer.write("Items,Quantity,Total Price of item");
+			writer.write("Items,Quantity,TotalPriceOfItem");
 			writer.newLine();
 
 			// write all records
-			for (InputItem item : items) {
+			for (InputItemVO item : items) {
 
-				writer.write(item.getItem() + "," + item.getQuantity()+ "," + itemsDao.getItemPrice(item.getItem()) * item.getQuantity());
+				writer.write(item.getItem() + "," + item.getQuantity() + ","
+						+ itemsDao.getItemPrice(item.getItem()) * item.getQuantity());
 				writer.newLine();
 			}
 
 			writer.write("Grand Total : " + calculateTotalPrice(items));
 			// close the writer
 			writer.close();
+			
+			System.out.println("successfully written in the file ");
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
 
-		return true;
+	public double calculateTotalPrice(List<InputItemVO> requestedItems) {
+		System.out.println("Inside method writeIntoOutputFile of CartServiceImpl class having input as requested item");
+		double totalPrice = 0;
+		for (InputItemVO requestedItem : requestedItems) {
+			totalPrice = totalPrice + itemsDao.getItemPrice(requestedItem.getItem()) * requestedItem.getQuantity();
+		}
+		System.out.println("Grand total of the items : " + totalPrice);
+		return totalPrice;
 	}
 
 }
