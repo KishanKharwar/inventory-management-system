@@ -15,7 +15,7 @@ import com.ims.modal.InputItemVO;
 public class CartServiceImpl implements ICartService {
 
 	private ItemsDao itemsDao = new ItemsDao();
-	public static Map<String, Integer> countMap = new HashMap<>();
+	private static Map<String, Integer> countMap = new HashMap<>();
 
 	public void processOrder(String fileName) {
 		System.out.println("Inside processOrder method of CartServiceImpl class with file name as input : " + fileName);
