@@ -1,11 +1,11 @@
-package com.ims.modal;
+package com.ims.model;
 
 public class ItemsVO {
 
 	private String category;
 	private String item;
-	private int quantity;
-	private double price;
+	private Integer quantity;
+	private Double price;
 
 	public String getCategory() {
 		return category;
@@ -23,25 +23,25 @@ public class ItemsVO {
 		this.item = item;
 	}
 
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
 	@Override
 	public String toString() {
-		return "Items [category=" + category + ", item=" + item + ", quantity=" + quantity + ", price=" + price + "]";
+		return "ItemsVO [category=" + category + ", item=" + item + ", quantity=" + quantity + ", price=" + price + "]";
 	}
 
 }

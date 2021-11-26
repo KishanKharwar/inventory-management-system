@@ -1,19 +1,10 @@
 package com.ims.main;
 
-import java.io.IOException;
-
-import com.ims.dao.ItemsDao;
-import com.ims.services.CartServiceImpl;
+import com.ims.service.CardServiceImpl;
 
 public class IMSMain {
-
-	public static void main(String[] args) throws IOException {
-		//loading the master data i.e., items
-		ItemsDao.loadItemsFromFile("items.csv");
-		
-		CartServiceImpl cartService = new CartServiceImpl();
-		cartService.processOrder("input.csv");
-		cartService.getCardDetails();
+	public static void main(String[] args) {
+		CardServiceImpl cardService = new CardServiceImpl();
+		cardService.processOrder();
 	}
-
 }

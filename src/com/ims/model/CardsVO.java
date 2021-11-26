@@ -1,4 +1,4 @@
-package com.ims.modal;
+package com.ims.model;
 
 public class CardsVO {
 	private String cardNumber;

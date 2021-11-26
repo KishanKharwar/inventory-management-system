@@ -1,0 +1,3 @@
+Essentials=3
+Luxury=4
+Misc=6

@@ -1,8 +1,8 @@
-package com.ims.modal;
+package com.ims.model;
 
 public class InputItemVO {
 	private String item;
-	private int quantity;
+	private Integer quantity;
 	private String cardNumber;
 
 	public String getItem() {
@@ -13,11 +13,11 @@ public class InputItemVO {
 		this.item = item;
 	}
 
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 

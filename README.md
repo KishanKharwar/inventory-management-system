@@ -29,8 +29,12 @@ The project will run from com.ims.main.IMSMain class :
 1. Run As -> Java Application
 
 
-
-
+Design Patterns Used
+============
+1. We have followed SOLID Design Principle in creating the project.
+1. In class ItemsDao, we have followed Cache Design Pattern and DAO Design Pattern.
+1. In class CardServiceImpl we have followed Adapter Design Pattern.
+1. In all the model classes, we have followed Value Object Design Pattern.
 
 
 
