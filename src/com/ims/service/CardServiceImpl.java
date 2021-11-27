@@ -12,34 +12,35 @@ import com.ims.model.ItemsVO;
 import com.ims.reader.ReadFile;
 import com.ims.writer.WriteIntoFile;
 
-public class CardServiceImpl implements ICartService{
+public class CardServiceImpl implements ICartService {
 
 	private ReadFile reader = new ReadFile();
 	private ItemsDao itemsDao = new ItemsDao();
 	private static Map<String, Integer> thresholdMap = new HashMap<>();
 	private static Map<String, Integer> inputCategoryMap = new HashMap<>();
+	private static Map<String, Double> paymentMap = new HashMap<>();
 
 	public void processOrder() {
 
 		loadMasterData();
 
 		boolean finalOutput = true;
-		
+
 		List<String> itemsWithIncorrectQty = validateInputItemQuantity();
 		if (!itemsWithIncorrectQty.isEmpty() && finalOutput) {
-			WriteIntoFile.writeIntoFile(itemsWithIncorrectQty);
+			WriteIntoFile.writeIntoFile(itemsWithIncorrectQty,true);
 			finalOutput = false;
 		}
 
 		String thresholdValue = validateCategoryThreshold();
 		if (thresholdValue != null && finalOutput) {
-			WriteIntoFile.writeIntoFile(thresholdValue);
+			WriteIntoFile.writeIntoFile(thresholdValue,false);
 			finalOutput = false;
 		}
 
 		if (finalOutput) {
 			Double totalPrice = calculateTotalPrice();
-			WriteIntoFile.writeIntoFile(totalPrice);
+			WriteIntoFile.writeIntoFile(totalPrice,false);
 		}
 
 	}
@@ -102,14 +103,31 @@ public class CardServiceImpl implements ICartService{
 	}
 
 	public Double calculateTotalPrice() {
+		addPaymentInfo();
 		List<InputItemVO> inputItems = reader.convertToInputItems();
 		double totalPrice = 0;
-		for (InputItemVO inputItem : inputItems) {
-			System.out.println("checking ::: item  "+inputItem.getItem()+" qty :"+inputItem.getQuantity() +" Price "+totalPrice);
-			totalPrice = totalPrice + itemsDao.getItemPrice(inputItem.getItem()) * inputItem.getQuantity();
-			itemsDao.addCardDetail(inputItem.getCardNumber());
+
+		for (Map.Entry<String, Double> entry : paymentMap.entrySet()) {
+			totalPrice = totalPrice + entry.getValue();
+			itemsDao.addCardDetail(entry.getKey());
 		}
+
 		System.out.println("Grand total of the items : " + totalPrice);
 		return totalPrice;
+	}
+
+	public void addPaymentInfo() {
+		List<InputItemVO> inputItems = reader.convertToInputItems();
+		for (InputItemVO inputItem : inputItems) {
+			if (!paymentMap.containsKey(inputItem.getCardNumber())) {
+				paymentMap.put(inputItem.getCardNumber(),
+						itemsDao.getItemPrice(inputItem.getItem()) * inputItem.getQuantity());
+			} else {
+				paymentMap.put(inputItem.getCardNumber(), paymentMap.get(inputItem.getCardNumber())
+						+ itemsDao.getItemPrice(inputItem.getItem()) * inputItem.getQuantity());
+
+			}
+		}
+
 	}
 }

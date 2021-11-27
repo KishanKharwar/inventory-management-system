@@ -21,12 +21,6 @@ import com.ims.model.CardsVO;
 import com.ims.model.InputItemVO;
 import com.ims.model.ItemsVO;
 
-/**
- * 
- * @author author-name this class is following 2 design patterns 1) DAO 2) Cache
- *         DP for storing the data to the map.
- *
- */
 public class ItemsDao implements IItemsDao{
 
 	// this hashmap is acting as database to store pre-populated items and cards

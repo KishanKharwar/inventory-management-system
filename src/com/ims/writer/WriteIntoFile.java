@@ -9,29 +9,31 @@ import java.util.List;
 
 public class WriteIntoFile {
 
-	public static void writeIntoFile(Object data) {
+	public static void writeIntoFile(Object data, boolean overwriteFile) {
 		try {
 			String fileName = "output.txt";
 			String path = System.getProperty("user.dir") + "/" + fileName;
 			File file = new File(path);
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file.getName(), true));
+			BufferedWriter bw = null;
 
 			if (data instanceof Double || data instanceof Integer) {
 				// total amount
-				bw.write("Toal Price : " +  data);
+				bw = new BufferedWriter(new FileWriter(file.getName(), overwriteFile));
+				bw.write("Toal Price : " + data);
 			}
 
 			if (data instanceof String) {
 				// failed in threshold
+				bw = new BufferedWriter(new FileWriter(file.getName(), overwriteFile));
 				bw.write(String.valueOf(data));
 			}
 
 			if (data instanceof List) {
 				// item qty not matching
+				bw = new BufferedWriter(new FileWriter(file.getName(), overwriteFile));
 				bw.write("Please correct quantities : ");
 				List<String> strList = (List) data;
-				for(String s : strList) {
+				for (String s : strList) {
 					bw.write("\n");
 					bw.write(s);
 				}
@@ -41,5 +43,5 @@ public class WriteIntoFile {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
