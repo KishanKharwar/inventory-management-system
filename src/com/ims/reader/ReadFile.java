@@ -7,8 +7,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import com.ims.model.CardsVO;
 import com.ims.model.InputItemVO;
@@ -76,19 +78,18 @@ public class ReadFile {
 		}
 		return itemsList;
 	}
-	public static List<CardsVO> convertToDBCards(){
-		List<CardsVO> cardsList = new ArrayList<>();
+	public static Set<String> convertToDBCards(){
+		Set<String> cardsSet = new HashSet<>();
 		String fileData = readFile("cards.csv");
 		String[] cards = fileData.split(" ");
 
-		for (int i = 1; i < cards.length; i++) {
-			if (cards.length > 1) {
-				CardsVO card = new CardsVO();
-				card.setCardNumber(cards[0]);
-				cardsList.add(card);
+		for (int i = 0; i < cards.length; i++) {
+			if (cards.length > 0) {
+				cardsSet.add(cards[i]);
 			}
 		}
-		return cardsList;
+		System.out.println(cards.length + "Cards List from the file : "+cardsSet);
+		return cardsSet;
 	}
 	
 }

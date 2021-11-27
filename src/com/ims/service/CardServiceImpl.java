@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.ims.dao.ItemsDao;
 import com.ims.model.CardsVO;
@@ -42,13 +43,13 @@ public class CardServiceImpl implements ICartService {
 			Double totalPrice = calculateTotalPrice();
 			WriteIntoFile.writeIntoFile(totalPrice,false);
 		}
-
+		
 	}
 
 	private void loadMasterData() {
 		List<ItemsVO> itemsList = reader.convertToDBItem();
-		List<CardsVO> cardsList = reader.convertToDBCards();
-		itemsDao.loadMasterData(itemsList, cardsList);
+		Set<String> cardsSet = reader.convertToDBCards();
+		itemsDao.loadMasterData(itemsList, cardsSet);
 	}
 
 	public List<String> validateInputItemQuantity() {
@@ -116,7 +117,7 @@ public class CardServiceImpl implements ICartService {
 		return totalPrice;
 	}
 
-	public void addPaymentInfo() {
+	private void addPaymentInfo() {
 		List<InputItemVO> inputItems = reader.convertToInputItems();
 		for (InputItemVO inputItem : inputItems) {
 			if (!paymentMap.containsKey(inputItem.getCardNumber())) {

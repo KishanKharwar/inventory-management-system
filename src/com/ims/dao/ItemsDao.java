@@ -14,27 +14,30 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.ims.model.CardsVO;
 import com.ims.model.InputItemVO;
 import com.ims.model.ItemsVO;
 
-public class ItemsDao implements IItemsDao{
+public class ItemsDao implements IItemsDao {
 
 	// this hashmap is acting as database to store pre-populated items and cards
 	private static Map<String, ItemsVO> itemMap = new HashMap<>();
-	private static List<String> cardList = new ArrayList();
+	private static Set<String> cardsSet = new HashSet<>();
 	private static Map<String, Double> paymentMap = new HashMap<>();
 
-	public static void loadMasterData(List<ItemsVO> itemsList, List<CardsVO> cardsList) {
+	public static void loadMasterData(List<ItemsVO> itemsList, Set<String> inputCardsSet) {
 		for (ItemsVO item : itemsList) {
 			itemMap.put(item.getItem(), item);
 		}
-		for (CardsVO card : cardsList) {
-			cardList.add(card.getCardNumber());
+		for (String card : inputCardsSet) {
+			cardsSet.add(card);
 		}
+		System.out.println("initializing cards with " + cardsSet);
 	}
 
 	// this method will print the list of items present in the hashmap(db)
@@ -61,20 +64,26 @@ public class ItemsDao implements IItemsDao{
 
 	// this method is for adding the card information to the database if not present
 	public void addCardDetail(String cardNo) {
-		if (!cardList.contains(cardNo)) {
-			cardList.add(cardNo);
+		System.out.println("Checking >>>>>>>>>>>>>>>> " + cardsSet.contains(cardNo) + "---cardv " + cardNo);
+		if (cardsSet.contains(cardNo) == false) {
+			System.out.println("Writing this card number   : " + cardNo);
+			cardsSet.add(cardNo);
 			writeIntoCardsFile(cardNo);
 		}
 	}
 
 	// this method is for getting all the card of the db
 	public void getAllCards() {
-		System.out.println(cardList);
+		System.out.println(cardsSet);
+	}
+
+	public void removeAllCards() {
+		cardsSet = null;
 	}
 
 	public void writeIntoCardsFile(String cardNo) {
 		try {
-			String path = System.getProperty("user.dir") + "/cards.csv" ;
+			String path = System.getProperty("user.dir") + "/cards.csv";
 			File file = new File(path);
 
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file.getName(), true));
