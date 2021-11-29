@@ -28,6 +28,10 @@ The project will run from com.ims.main.IMSMain class :
 1. right click on com.ims.main.IMSMain
 1. Run As -> Java Application
 
+Run In CLI : 
+javaw.exe -classpath ./bin com.ims.main.IMSMain
+
+
 
 Design Patterns Used
 ============
