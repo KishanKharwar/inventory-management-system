@@ -41,9 +41,14 @@ Design Patterns Used
 1. In all the model classes, we have followed Value Object Design Pattern.
 
 
-
-
-
+Information about Files
+----------------------------
+- items.csv : item database
+- cards.csv : cards database
+- config.txt : add configuration for maximum allowed items per category.
+- input.csv : add input details in the given format Items,Quantity,CardNumber
+- output.txt : output file
+- class diagram : [image](./ims-class-diagram.png)
 
 
 
